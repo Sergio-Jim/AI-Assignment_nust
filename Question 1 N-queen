@@ -1,0 +1,26 @@
+using JuMP, GLPK, Gadfly
+N=8
+model = Model(GLPK.Optimizer);
+@variable(model, board[1:N,1:N], binary=true)
+@objective(model, Max, sum( board[i,j] for i in 1:N, j in 1:N))
+
+for j in 1:N
+    @constraint(model, sum(board[i,j] for i in 1:N) == 1)
+end
+for i in 1:N
+    @constraint(model, sum(board[i,j] for j in 1:N) == 1)
+end
+
+for k in 2:2*N
+    @constraint(model, 
+    sum(board[i,j] for i in 1:N, j in 1:N if i+j == k) <= 1)
+end
+
+for k in -(N-1):(N-1)
+    @constraint(model, 
+    sum(board[i,j] for i in 1:N, j in 1:N if i-j == k) <= 1)
+end
+
+print(model)
+optimize!(model)
+spy(JuMP.value.(board))
