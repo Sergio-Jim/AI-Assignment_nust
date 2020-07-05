@@ -1,5 +1,11 @@
 using JuMP, GLPK, Gadfly
-N=8
+
+function inputVariable()
+print("Enter Variable: ")
+parse(Int, readline())
+end
+
+N = inputVariable()
 model = Model(GLPK.Optimizer);
 @variable(model, board[1:N,1:N], binary=true)
 @objective(model, Max, sum( board[i,j] for i in 1:N, j in 1:N))
