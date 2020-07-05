@@ -1,0 +1,100 @@
+
+export AbstractMarkovDecisionProcess, MarkovDecisionProcess, reward, transition_model, actions, value_iteration
+
+abstract type AbstractMarkovDecisionProcess end;
+
+struct MarkovDecisionProcess
+    initial
+    states
+    actions_list
+    terminal_states
+    transitions
+    gamma
+    reward
+
+    function MarkovDecisionProcess(initial, actions_list, terminal_states, transitions, states, gamma)
+        if (!(0 < gamma <= 1))
+            error("MarkovDecisionProcess(): The gamma variable of an MDP must be between 0 and 1, the constructor was given ", gamma, "!");
+        end
+        local new_states::Set{typeof(initial)};
+        if (typeof(states) <: Set)
+            new_states = states;
+        else
+            new_states = Set{typeof(initial)}();
+        end
+        return new(initial, new_states, actions_list, terminal_states, transitions, gamma, Dict());
+    end  
+end
+
+    
+    #Rewards
+    println("Input reward for state0: ")
+    rewardS0 = readline()
+
+    println("Input reward for state1: ")
+    rewardS1 = readline()
+
+    println("Input reward for state2: ")
+    rewardS2 = readline()
+
+    println("Input reward for state3: ")
+    rewardS3 = readline()
+
+    println("Input reward for state4: ")
+    rewardS4 = readline()
+
+    #Probability Distribution
+    println("Input probability distribution pdis0 for state0: ")
+    pdis0 = readline()
+
+    println("Input probability distribution pdis1 for state1: ")
+    pdis1 = readline()
+
+    println("Input probability distribution pdis10 for state1: ")
+    pdis10 = readline()
+
+    println("Input probability distribution pdis11 for state4: ")
+    pdis11 = readline()
+
+    println("Input probability distribution pdis12 for state2: ")
+    pdis12 = readline()
+
+    println("Input probability distribution pdis20 for state1: ")
+    pdis20 = readline()
+
+    println("Input probability distribution pdis21 for state2: ")
+    pdis21 = readline()
+
+    println("Input probability distribution pdis30 for state2: ")
+    pdis30 = readline()
+
+    println("Input probability distribution pdis31 for state5: ")
+    pdis31 = readline()
+
+    println("Input probability distribution pdis32 for state3: ")
+    pdis32 = readline()
+
+    println("Input probability distribution pdis40 for state2: ")
+    pdis40 = readline()
+
+    println("Input probability distribution pdis41 for state3: ")
+    pdis41 = readline()
+
+transitionsM = Dict([Pair("state0", Dict([
+                        Pair("a0b", (1, "state0")),
+                        Pair("a1b", (pdis0, "state0")), Pair("a1b",(pdis1,"state1"))])),
+                     Pair("state1", Dict([
+                        Pair("a0c", (1, "state1")),
+                        Pair("a1c", (pdis10, "state1")), Pair("a1c",(pdis11,"state4")), Pair("a1c",(pdis12,"state2")),
+                        Pair("a2c",(pdis20,"state1")), Pair("a2c",(pdis21,"state2"))])),
+                    Pair("state1", Dict([
+                        Pair("a0d", (1, "state2")),
+                        Pair("a1d", (pdis30, "state2")), Pair("a1d",(pdis31,"state5")), Pair("a1d",(pdis32,"state5")),
+                        Pair("a2d",(pdis40,"state2")), Pair("a2d",(pdis41,"state3"))])),
+
+function reward()
+    rewards = Dict("state0" => rewardS0, "state1" => rewardS1, "state2" => rewardS2, "state3" => rewardS3)
+    return rewards;
+end
+
+mdp = MarkovDecisionProcess("state0", Set(["a0b", "a1b", "a0c", "a1c", "a2c", "a0d", "a1d", "a2d"]), Set(["state3",]), transitionsM, Set(["state0","state1","state2", "state3", "state4", "state5"]),0.9);
